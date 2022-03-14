@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             StemmingSeeder::class,
+            TfidfSeeder::class,
         ]);
     }
 }
