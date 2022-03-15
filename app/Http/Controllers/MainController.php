@@ -18,6 +18,7 @@ class MainController extends Controller
     {
         $stemming = Stemming::all();
         $string = str_replace("  ", ' ', $stemming[0]->data); // replace double space with single space
+        $string = str_replace("/", ' ', $string); // replace slash with single space
         $value = str_replace(array(',', '.', '"', "“", "”", "(", ")", "!", ":"), '', $string); // hapus tanda baca
         $tokenizing = explode(' ', $value);
 
