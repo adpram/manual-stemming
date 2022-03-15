@@ -59,11 +59,26 @@
                 <table cellspacing="0" cellpadding="5" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Term Unik</th>
-                            <th>Artikel 1</th>
-                            <th>Artikel 2</th>
-                            <th>Artikel 3</th>
-                            <th>Artikel 4</th>
+                            <th rowspan="2" class="text-center">Term Unik</th>
+                            <th colspan="4" class="text-center">Tf</th>
+                            <th colspan="4" class="text-center">Tf_wt</th>
+                            <th rowspan="2" class="text-center">Df</th>
+                            <th rowspan="2" class="text-center">Idf</th>
+                            <th colspan="4" class="text-center">Tf_idf</th>
+                        </tr>
+                        <tr>
+                            <th>Tf Artikel 1</th>
+                            <th>Tf Artikel 2</th>
+                            <th>Tf Artikel 3</th>
+                            <th>Tf Artikel 4</th>
+                            <th>Tf_wt Artikel 1</th>
+                            <th>Tf_wt Artikel 2</th>
+                            <th>Tf_wt Artikel 3</th>
+                            <th>Tf_wt Artikel 4</th>
+                            <th>Tf_idf Artikel 1</th>
+                            <th>Tf_idf Artikel 2</th>
+                            <th>Tf_idf Artikel 3</th>
+                            <th>Tf_idf Artikel 4</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,32 +88,62 @@
                                 @php
                                     if(in_array($row, $artikel1)){
                                         $artikel1Value = $artikel1Count[$row];
+                                        $tf_wt_artikel1 = log10($artikel1Value) + 1;
+                                        $df1 = 1;
                                     }else{
                                         $artikel1Value = 0;
+                                        $tf_wt_artikel1 = 0;
+                                        $df1 = 0;
                                     }
 
                                     if(in_array($row, $artikel2)){
                                         $artikel2Value = $artikel2Count[$row];
+                                        $tf_wt_artikel2 = log10($artikel2Value) + 1;
+                                        $df2 = 1;
                                     }else{
                                         $artikel2Value = 0;
+                                        $tf_wt_artikel2 = 0;
+                                        $df2 = 0;
                                     }
 
                                     if(in_array($row, $artikel3)){
                                         $artikel3Value = $artikel3Count[$row];
+                                        $tf_wt_artikel3 = log10($artikel3Value) + 1;
+                                        $df3 = 1;
                                     }else{
                                         $artikel3Value = 0;
+                                        $tf_wt_artikel3 = 0;
+                                        $df3 = 0;
                                     }
 
                                     if(in_array($row, $artikel4)){
                                         $artikel4Value = $artikel4Count[$row];
+                                        $tf_wt_artikel4 = log10($artikel4Value) + 1;
+                                        $df4 = 1;
                                     }else{
                                         $artikel4Value = 0;
+                                        $tf_wt_artikel4 = 0;
+                                        $df4 = 0;
                                     }
                                 @endphp
                                 <td>{{$artikel1Value}}</td>
                                 <td>{{$artikel2Value}}</td>
                                 <td>{{$artikel3Value}}</td>
                                 <td>{{$artikel4Value}}</td>
+                                <td>{{round($tf_wt_artikel1,3)}}</td>
+                                <td>{{round($tf_wt_artikel2,3)}}</td>
+                                <td>{{round($tf_wt_artikel3,3)}}</td>
+                                <td>{{round($tf_wt_artikel4,3)}}</td>
+                                <td>{{$dfValue = $df1+$df2+$df3+$df4}}</td>
+                                @if($dfValue > 0)
+                                    <td>{{$idf = round(log10(4/$dfValue),3)}}</td>
+                                @else 
+                                    <td>{{$idf = 1;}}</td>
+                                @endif
+                                <td>{{round($tf_wt_artikel1 * $idf,3)}}</td>
+                                <td>{{round($tf_wt_artikel2 * $idf,3)}}</td>
+                                <td>{{round($tf_wt_artikel3 * $idf,3)}}</td>
+                                <td>{{round($tf_wt_artikel4 * $idf,3)}}</td>
                             </tr>
                         @endforeach
                     </tbody>

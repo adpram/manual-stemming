@@ -55,7 +55,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12">
+            <div class="col-10">
                 <table cellspacing="0" cellpadding="5" id="tabel_stemming" class="table table-bordered">
                     <thead>
                         <tr>
@@ -80,7 +80,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php $tokenYangLolos2 = []; @endphp
+                        @php $tokenYangLolos2 = []; $daftarStopWord = [];@endphp
                         @foreach ($tokenizing as $index => $token)
                             <tr>
                                 @php
@@ -108,9 +108,11 @@
                                             $seleksisw2 = 'Lolos';
                                             array_push($tokenYangLolos2, $resultStemming[$index]);
                                         } else if ( in_array(strtolower($resultStemming[$index]), $tokenTidakLolos) || preg_match('~[0-9]+~', $resultStemming[$index]) ) {
-                                            $seleksisw2 = 'Tidak Lolos';                            
+                                            $seleksisw2 = 'Tidak Lolos';      
+                                            array_push($daftarStopWord, strtolower($token));
                                         } else if ( $resultStemming[$index] == "-" ) {
                                             $seleksisw2 = '-';
+                                            array_push($daftarStopWord, strtolower($token));
                                         } else {
                                             $seleksisw2 = 'Lolos';
                                             array_push($tokenYangLolos2, $resultStemming[$index]);
@@ -125,6 +127,23 @@
                             </tr>
                         @endforeach
                         <input type="hidden" id="tokenYangLolos2" value="{{implode(' ', $tokenYangLolos2)}}">
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-2">
+                <table cellspacing="0" cellpadding="5" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Daftar Stop Word</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $daftarSW = array_count_values($daftarStopWord); @endphp
+                        @foreach ($daftarSW as $key => $row)
+                            <tr>
+                                <td>{{$key}}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
