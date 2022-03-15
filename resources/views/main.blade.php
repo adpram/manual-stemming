@@ -134,18 +134,25 @@
                 <table cellspacing="0" cellpadding="5" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Daftar Stop Word</th>
+                            <th>
+                                Daftar Stop Word
+                                <button onclick="salinDaftarStopWord()" type="button" style="font-size: 12px" class="btn btn-secondary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Salin ke clipboard" id="salinDaftarStopWord">
+                                    Stop Word
+                                </button>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                        @php $daftarSW = array_count_values($daftarStopWord); @endphp
+                        @php $daftarSW = array_count_values($daftarStopWord); $keyStopWord = [];@endphp
                         @foreach ($daftarSW as $key => $row)
+                            @php array_push($keyStopWord, $key) @endphp
                             <tr>
                                 <td>{{$key}}</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+                <input type="hidden" id="daftarStopWordKey" value="{{implode(' ', $keyStopWord)}}">
             </div>
         </div>
     </div>
@@ -434,6 +441,14 @@
             navigator.clipboard.writeText(copyText.value);
 
             var tooltip = document.getElementById("salinTokenLolos2");
+            tooltip.innerHTML = "Tersalin ya ges ya";
+        }
+
+        function salinDaftarStopWord() {
+            var copyText = document.getElementById("daftarStopWordKey");
+            navigator.clipboard.writeText(copyText.value);
+
+            var tooltip = document.getElementById("salinDaftarStopWord");
             tooltip.innerHTML = "Tersalin ya ges ya";
         }
     </script>
