@@ -84,6 +84,7 @@ class TfidfController extends Controller
             $tfidf->artikel2 = $request->artikel2;
             $tfidf->artikel3 = $request->artikel3;
             $tfidf->artikel4 = $request->artikel4;
+            $tfidf->stop_words = $request->stop_words;
             $tfidf->update();
             DB::commit();
             return response()->json([

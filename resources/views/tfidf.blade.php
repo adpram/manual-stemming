@@ -53,6 +53,18 @@
                     Data 4
                 </button>
             </div>
+            <div class="col-2">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal"
+                    data-bs-target="#modal-semua-stop-word">
+                    Input semua stop word
+                </button>
+            </div>
+            <div class="col-2">
+                <button onclick="salinSemuaDaftarStopWord()" type="button" style="font-size: 12px" class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Salin ke clipboard" id="salinSemuaDaftarStopWord">
+                    Salin Daftar Stop Word
+                </button>
+            </div>
         </div>
         <div class="row">
             <div class="col-12">
@@ -151,6 +163,16 @@
             </div>
         </div>
     </div>
+    
+    @php 
+        $stopWords = explode(" ", $tfidf[0]->stop_words);
+        $allStopWords = array_count_values($stopWords);
+        $listStopWords = [];
+        foreach($allStopWords as $key => $value){
+            array_push($listStopWords, $key);
+        }
+    @endphp
+    <input type="hidden" id="daftarSemuaStopWordKey" value="{{implode(' ', $listStopWords)}}">
 
     <!-- Modal -->
     <div class="modal fade" id="modal-data-artikel-1" tabindex="-1" aria-labelledby="modal-data-artikel-1Label" aria-hidden="true">
@@ -168,6 +190,7 @@
                     <input type="hidden" name="artikel2" value="{{$tfidf[0]->artikel2}}">
                     <input type="hidden" name="artikel3" value="{{$tfidf[0]->artikel3}}">
                     <input type="hidden" name="artikel4" value="{{$tfidf[0]->artikel4}}">
+                    <input type="hidden" name="stop_words" value="{{$tfidf[0]->stop_words}}">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-success btn-sm">Simpan</button>
@@ -192,6 +215,7 @@
                     <input type="hidden" name="artikel1" value="{{$tfidf[0]->artikel1}}">
                     <input type="hidden" name="artikel3" value="{{$tfidf[0]->artikel3}}">
                     <input type="hidden" name="artikel4" value="{{$tfidf[0]->artikel4}}">
+                    <input type="hidden" name="stop_words" value="{{$tfidf[0]->stop_words}}">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-success btn-sm">Simpan</button>
@@ -215,6 +239,7 @@
                     </div>
                     <input type="hidden" name="artikel2" value="{{$tfidf[0]->artikel2}}">
                     <input type="hidden" name="artikel1" value="{{$tfidf[0]->artikel1}}">
+                    <input type="hidden" name="stop_words" value="{{$tfidf[0]->stop_words}}">
                     <input type="hidden" name="artikel4" value="{{$tfidf[0]->artikel4}}">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
@@ -240,6 +265,32 @@
                     <input type="hidden" name="artikel2" value="{{$tfidf[0]->artikel2}}">
                     <input type="hidden" name="artikel3" value="{{$tfidf[0]->artikel3}}">
                     <input type="hidden" name="artikel1" value="{{$tfidf[0]->artikel1}}">
+                    <input type="hidden" name="stop_words" value="{{$tfidf[0]->stop_words}}">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-success btn-sm">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-semua-stop-word" tabindex="-1" aria-labelledby="modal-semua-stop-wordLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-semua-stop-wordLabel">Semua Stop Word</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="" id="form-semua-stop-word">
+                    <input type="hidden" name="id" id="id-tfidf-semua-stop-word" value="{{$tfidf[0]->id}}">
+                    <div class="modal-body">
+                        <textarea name="stop_words" class="form-control" id="" cols="30" rows="10">{{$tfidf[0]->stop_words}}</textarea>
+                    </div>
+                    <input type="hidden" name="artikel2" value="{{$tfidf[0]->artikel2}}">
+                    <input type="hidden" name="artikel3" value="{{$tfidf[0]->artikel3}}">
+                    <input type="hidden" name="artikel1" value="{{$tfidf[0]->artikel1}}">
+                    <input type="hidden" name="artikel4" value="{{$tfidf[0]->artikel4}}">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-success btn-sm">Simpan</button>
@@ -428,6 +479,58 @@
 
             }
         });
+
+        $('#form-semua-stop-word').on('submit', function (e) {
+            if (!e.isDefaultPrevented()) {
+                var id = $('#id-tfidf-semua-stop-word').val()
+                var url = '{{ route("perbaruiArtikel", ":id") }}'.replace(':id', id);
+                $.ajax({
+                    url: url,
+                    type: "PUT",
+                    beforeSend: function () {
+                        swal({
+                            title: 'Menunggu',
+                            html: 'Memproses data',
+                            onOpen: () => {
+                                swal.showLoading()
+                            }
+                        })
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: $('#form-semua-stop-word').serialize(),
+                    dataType: "json",
+                    success: function (data) {
+                        swal({
+                            title: 'Berhasil!',
+                            text: 'Stop Words diperbarui!',
+                            icon: 'success'
+                        }).then(function () {
+                            $('#modal-semua-stop-word').modal('hide');
+                            window.location.href = "{{ route('tfidfIndex') }}";
+                        });
+                    },
+                    error: function (e) {
+                        swal({
+                            title: 'Gagal!',
+                            text: 'Stop Words gagal diperbarui!, silahkan menghubungi IT',
+                            icon: 'error'
+                        })
+                    }
+                });
+                return false;
+
+            }
+        });
+
+        function salinSemuaDaftarStopWord() {
+            var copyText = document.getElementById("daftarSemuaStopWordKey");
+            navigator.clipboard.writeText(copyText.value);
+
+            var tooltip = document.getElementById("salinSemuaDaftarStopWord");
+            tooltip.innerHTML = "Tersalin ya ges ya";
+        }
     </script>
 </body>
 

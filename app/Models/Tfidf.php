@@ -12,6 +12,7 @@ class Tfidf extends Model
         'artikel1',
         'artikel2',
         'artikel3',
-        'artikel4'
+        'artikel4',
+        'stop_words'
     ];
 }
