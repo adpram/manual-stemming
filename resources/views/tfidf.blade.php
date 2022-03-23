@@ -142,20 +142,20 @@
                                 <td>{{$artikel2Value}}</td>
                                 <td>{{$artikel3Value}}</td>
                                 <td>{{$artikel4Value}}</td>
-                                <td>{{round($tf_wt_artikel1,3)}}</td>
-                                <td>{{round($tf_wt_artikel2,3)}}</td>
-                                <td>{{round($tf_wt_artikel3,3)}}</td>
-                                <td>{{round($tf_wt_artikel4,3)}}</td>
+                                <td>{{$tf_wt_artikel1}}</td>
+                                <td>{{$tf_wt_artikel2}}</td>
+                                <td>{{$tf_wt_artikel3}}</td>
+                                <td>{{$tf_wt_artikel4}}</td>
                                 <td>{{$dfValue = $df1+$df2+$df3+$df4}}</td>
                                 @if($dfValue > 0)
-                                    <td>{{$idf = round(log10(4/$dfValue),3)}}</td>
+                                    <td>{{$idf = log10(4/$dfValue)}}</td>
                                 @else 
                                     <td>{{$idf = 1;}}</td>
                                 @endif
-                                <td>{{round($tf_wt_artikel1 * $idf,3)}}</td>
-                                <td>{{round($tf_wt_artikel2 * $idf,3)}}</td>
-                                <td>{{round($tf_wt_artikel3 * $idf,3)}}</td>
-                                <td>{{round($tf_wt_artikel4 * $idf,3)}}</td>
+                                <td>{{$tf_wt_artikel1 * $idf}}</td>
+                                <td>{{$tf_wt_artikel2 * $idf}}</td>
+                                <td>{{$tf_wt_artikel3 * $idf}}</td>
+                                <td>{{$tf_wt_artikel4 * $idf}}</td>
                             </tr>
                         @endforeach
                     </tbody>
